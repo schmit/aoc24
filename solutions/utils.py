@@ -1,4 +1,7 @@
 
+def read(input_path):
+    with open(input_path, 'r') as f:
+        return f.read().strip()
 
 def lines(input_path):
     with open(input_path, 'r') as f:
