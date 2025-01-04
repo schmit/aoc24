@@ -1,12 +1,8 @@
-from solutions.utils import lines
+from solutions.utils import numbers
 
 import collections
 
 
-def parse(lines):
-    for line in lines:
-        number_strs = line.strip().split()
-        yield [int(n) for n in number_strs]
 
 
 def one(parsed_lines):
@@ -30,7 +26,7 @@ def two(parsed_lines):
     return total
 
 def solve(input_file: str):
-    parsed = list(parse(lines(input_file)))
+    parsed = list(numbers(input_file))
 
     print("part 1:")
     print(one(parsed))
