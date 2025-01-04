@@ -32,12 +32,9 @@ def one(reports):
 def two(reports):
     n_safe = 0
     for report in reports:
-        if is_safe(report):
+        # brute force
+        if is_safe(report) or any(is_safe([x for i, x in enumerate(report) if i != j]) for j in range(len(report))):
             n_safe += 1
-        else:
-            # brute force
-            if any(is_safe([x for i, x in enumerate(report) if i != j]) for j in range(len(report))):
-                n_safe += 1
 
     return n_safe
 
