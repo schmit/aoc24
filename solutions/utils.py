@@ -6,7 +6,7 @@ def read(input_path):
 def lines(input_path):
     with open(input_path, 'r') as f:
         for line in f:
-            yield line
+            yield line.strip()
 
 def numbers(input_path):
     for line in lines(input_path):
