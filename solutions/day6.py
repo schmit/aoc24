@@ -4,17 +4,18 @@ from collections import namedtuple
 from solutions.utils import lines
 
 
+Location = tuple
 Direction = Enum('Direction', 'UP DOWN LEFT RIGHT')
 State = namedtuple('State', 'location direction')
 
 
-def find_starting_position(situation: list[str]):
-    for i in range(len(situation)):
-        for j in range(len(situation[0])):
-            if situation[i][j] == '^':
+def find_starting_position(grid: list[str]):
+    for i in range(len(grid)):
+        for j in range(len(grid[0])):
+            if grid[i][j] == '^':
                 return i, j
 
-def forward(current: State):
+def forward(current: State) -> Location:
     i, j = current.location
     match current.direction:
         case Direction.UP:
@@ -26,7 +27,7 @@ def forward(current: State):
         case Direction.RIGHT:
             return i, j + 1
 
-def rotate(current: State):
+def rotate(current: State) -> Direction:
     match current.direction:
         case Direction.UP:
             return Direction.RIGHT
@@ -37,38 +38,84 @@ def rotate(current: State):
         case Direction.LEFT:
             return Direction.UP
 
-def step(situation: list[str], current: State):
+
+def is_in_bounds(grid, location):
+    i, j = location
+    return 0 <= i < len(grid) and 0 <= j < len(grid[0])
+
+def get_value(grid, location):
+    if is_in_bounds(grid, location):
+        i, j = location
+        return grid[i][j]
+    return None
+
+def step(grid: list[str], current: State) -> State | None:
     while True:
         i, j = forward(current)
-        try:
-            match situation[i][j]:
-                case '.':
-                    return State((i, j), current.direction)
-                case '^':
-                    return State((i, j), current.direction)
-                case '#':
-                    current = State(current.location, rotate(current))
-        except IndexError:
-            # we are out of bounds
-            return None
+        match get_value(grid, (i, j)):
+            case '.':
+                return State((i, j), current.direction)
+            case '^':
+                return State((i, j), current.direction)
+            case '#':
+                current = State(current.location, rotate(current))
+            case None:
+                return None
 
-def trace_path(situation, current: State):
-    visited = set()
+def trace_path(grid, current: State):
+    path = []
 
     while current:
-        visited.add(current.location)
-        current = step(situation, current)
+        path.append(current)
+        current = step(grid, current)
 
-    return visited
+    return path
 
+def does_path_cycle(grid, current: State):
+    """
+    Checks whether we are on a path that cycles.
 
+    A path cycles if it hits a state that we have already visited.
+    A path does not cycle if it goes out of bounds.
+    """
+    visited = set()
+    while current:
+        if current in visited:
+            return True
+        visited.add(current)
+        current = step(grid, current)
 
-def one(situation: list[str]):
-    start = State(find_starting_position(situation), Direction.UP)
-    path = trace_path(situation, start)
-    return len(path)
+    return False
+
+def copy_grid(grid):
+    return [list(row) for row in grid]
+
+def add_obstruction(grid, obstruction):
+    new_grid = copy_grid(grid)
+    i, j = obstruction
+    new_grid[i][j] = '#'
+    return new_grid
+
+def one(grid: list[str]):
+    start = State(find_starting_position(grid), Direction.UP)
+    path = trace_path(grid, start)
+    return len(set(state.location for state in path))
+
+def two(grid: list[str]):
+    start = State(find_starting_position(grid), Direction.UP)
+    path = trace_path(grid, start)
+
+    obstructions = set()
+    for state in path:
+        if state.location != start.location:
+            grid_with_obstruction = add_obstruction(grid, state.location)
+            if does_path_cycle(grid_with_obstruction, start):
+                obstructions.add(state.location)
+
+    return len(obstructions)
 
 
 def solve(input_file: str):
-    situation = list(lines(input_file))
-    print(one(situation))
+    grid = [[ch for ch in line] for line in lines(input_file)]
+    print(one(grid))
+    print(two(grid))

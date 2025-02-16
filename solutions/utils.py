@@ -12,3 +12,4 @@ def numbers(input_path):
     for line in lines(input_path):
         number_strs = line.strip().split()
         yield [int(n) for n in number_strs]
+
