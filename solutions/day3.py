@@ -4,15 +4,15 @@ from solutions.io import read
 
 
 def one(code):
-    pattern = re.compile('mul\((\d+),(\d+)\)')
+    pattern = re.compile("mul\((\d+),(\d+)\)")
     matches = pattern.findall(code)
     return sum(int(x) * int(y) for x, y in matches)
+
 
 def two(code):
     do_pattern = re.compile("do\(\)")
     dont_pattern = re.compile("don't\(\)")
 
-    
     total = 0
     enabled = True
     while code:
@@ -21,16 +21,17 @@ def two(code):
         if enabled:
             # if enabled, add values up to switch point
             if match:
-                total += one(code[:match.start()])
+                total += one(code[: match.start()])
             else:
                 # end of string
                 total += one(code)
 
         # proceed to next section (if exists)
-        code = code[match.end():] if match else None
+        code = code[match.end() :] if match else None
         enabled = not enabled
-    
+
     return total
+
 
 def solve(input_path):
     code = read(input_path)

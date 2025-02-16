@@ -1,19 +1,20 @@
-from enum import Enum 
+from enum import Enum
 from collections import namedtuple
 
 from solutions.io import lines
 
 
 Location = tuple
-Direction = Enum('Direction', 'UP DOWN LEFT RIGHT')
-State = namedtuple('State', 'location direction')
+Direction = Enum("Direction", "UP DOWN LEFT RIGHT")
+State = namedtuple("State", "location direction")
 
 
 def find_starting_position(grid: list[str]):
     for i in range(len(grid)):
         for j in range(len(grid[0])):
-            if grid[i][j] == '^':
+            if grid[i][j] == "^":
                 return i, j
+
 
 def forward(current: State) -> Location:
     i, j = current.location
@@ -26,6 +27,7 @@ def forward(current: State) -> Location:
             return i, j - 1
         case Direction.RIGHT:
             return i, j + 1
+
 
 def rotate(current: State) -> Direction:
     match current.direction:
@@ -43,24 +45,27 @@ def is_in_bounds(grid, location):
     i, j = location
     return 0 <= i < len(grid) and 0 <= j < len(grid[0])
 
+
 def get_value(grid, location):
     if is_in_bounds(grid, location):
         i, j = location
         return grid[i][j]
     return None
 
+
 def step(grid: list[str], current: State) -> State | None:
     while True:
         i, j = forward(current)
         match get_value(grid, (i, j)):
-            case '.':
+            case ".":
                 return State((i, j), current.direction)
-            case '^':
+            case "^":
                 return State((i, j), current.direction)
-            case '#':
+            case "#":
                 current = State(current.location, rotate(current))
             case None:
                 return None
+
 
 def trace_path(grid, current: State):
     path = []
@@ -70,6 +75,7 @@ def trace_path(grid, current: State):
         current = step(grid, current)
 
     return path
+
 
 def does_path_cycle(grid, current: State):
     """
@@ -87,19 +93,23 @@ def does_path_cycle(grid, current: State):
 
     return False
 
+
 def copy_grid(grid):
     return [list(row) for row in grid]
+
 
 def add_obstruction(grid, obstruction):
     new_grid = copy_grid(grid)
     i, j = obstruction
-    new_grid[i][j] = '#'
+    new_grid[i][j] = "#"
     return new_grid
+
 
 def one(grid: list[str]):
     start = State(find_starting_position(grid), Direction.UP)
     path = trace_path(grid, start)
     return len(set(state.location for state in path))
+
 
 def two(grid: list[str]):
     start = State(find_starting_position(grid), Direction.UP)

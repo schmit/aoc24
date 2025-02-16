@@ -8,7 +8,7 @@ app = typer.Typer()
 solutions_dir = Path(__file__).parent / "solutions"
 for solution_file in solutions_dir.glob("day*.py"):
     day_name = solution_file.stem  # e.g., "day1"
-    
+
     # Dynamically import the module
     spec = importlib.util.spec_from_file_location(day_name, solution_file)
     module = importlib.util.module_from_spec(spec)
@@ -21,7 +21,8 @@ for solution_file in solutions_dir.glob("day*.py"):
 
 @app.command("hello")
 def hello():
-    print(f"hello")
+    print("hello")
+
 
 if __name__ == "__main__":
     app()
