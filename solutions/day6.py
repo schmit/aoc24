@@ -1,7 +1,7 @@
 from enum import Enum 
 from collections import namedtuple
 
-from solutions.utils import lines
+from solutions.io import lines
 
 
 Location = tuple

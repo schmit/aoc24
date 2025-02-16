@@ -1,6 +1,6 @@
 import itertools as it
 import functools as ft
-from solutions.utils import lines
+from solutions.io import lines
 
 
 def create_rules(raw_rules):

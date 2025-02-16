@@ -1,4 +1,4 @@
-from solutions.utils import numbers
+from solutions.io import numbers
 
 import collections
 

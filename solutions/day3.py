@@ -1,6 +1,6 @@
 import re
 
-from solutions.utils import read
+from solutions.io import read
 
 
 def one(code):

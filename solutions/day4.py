@@ -1,4 +1,4 @@
-from solutions.utils import lines
+from solutions.io import lines
 
 def get_value(matrix, loc):
     i, j = loc
