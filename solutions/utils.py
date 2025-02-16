@@ -1,15 +1,12 @@
+import time
 
-def read(input_path):
-    with open(input_path, 'r') as f:
-        return f.read().strip()
 
-def lines(input_path):
-    with open(input_path, 'r') as f:
-        for line in f:
-            yield line.strip()
+def timeit(func):
+    def timed(*args, **kwargs):
+        start = time.process_time()
+        result = func(*args, **kwargs)
+        end = time.process_time()
+        print(f"{func.__name__} took {end - start} seconds")
+        return result
 
-def numbers(input_path):
-    for line in lines(input_path):
-        number_strs = line.strip().split()
-        yield [int(n) for n in number_strs]
-
+    return timed
